@@ -1,6 +1,6 @@
-# 🔓 SOLUTION — ID-Networkers Combined Lab 2: The XML Gateway
+# SOLUTION — ID-Networkers Combined Lab 2: The XML Gateway
 
-> ⚠️ **SPOILER WARNING** — This document contains the full solution. Attempt the lab on your own before reading.
+> **SPOILER WARNING** — This document contains the full solution. Attempt the lab on your own before reading.
 
 ---
 
@@ -28,7 +28,7 @@ Navigate to `http://localhost:8000` and log in with the provided credentials:
 | Password | `guest123` |
 
 You will be redirected back to the login page with the message:
-> ⛔ Access Denied — Admin privileges required.
+> Access Denied — Admin privileges required.
 
 ### 1.2 — Inspect the JWT
 
@@ -103,7 +103,7 @@ In your browser's Developer Tools:
 2. Find `session_token` and replace its value with the forged token above.
 3. Navigate to `http://localhost:8000/dashboard`.
 
-✅ **You should now see the Admin Dashboard.**
+**You should now see the Admin Dashboard.**
 
 ### 1.5 — Quick Script (Python)
 
@@ -172,7 +172,7 @@ The result page will display the parsed XML with the entity resolved:
 </config>
 ```
 
-🚩 **Flag:** `FLAG{XXE_AND_JWT_CH41N3D_ATT4CK_SUCC3SS}`
+**Flag:** `FLAG{XXE_AND_JWT_CH41N3D_ATT4CK_SUCC3SS}`
 
 ---
 
