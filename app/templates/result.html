@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parse Result — The XML Gateway</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;600&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #0a0a0a;
+            color: #c0c0c0;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 255, 65, 0.015) 2px,
+                rgba(0, 255, 65, 0.015) 4px
+            );
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* ---- Top Bar ---- */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.8rem 2rem;
+            border-bottom: 1px solid #1a1a1a;
+            background: #0d0d0d;
+        }
+
+        .topbar .brand {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            color: #00ff41;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .topbar .user-info {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.7rem;
+            color: #555;
+        }
+
+        .topbar .user-info span {
+            color: #00ff41;
+        }
+
+        .topbar nav a {
+            color: #444;
+            text-decoration: none;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.7rem;
+            border: 1px solid #222;
+            padding: 0.3rem 0.8rem;
+            border-radius: 2px;
+            transition: all 0.2s;
+            margin-left: 0.5rem;
+        }
+
+        .topbar nav a:hover {
+            border-color: #00ff41;
+            color: #00ff41;
+        }
+
+        /* ---- Main Content ---- */
+        .container {
+            max-width: 780px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .page-title {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: #00ff41;
+            margin-bottom: 0.3rem;
+        }
+
+        .page-sub {
+            font-size: 0.7rem;
+            color: #444;
+            margin-bottom: 2rem;
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* ---- Result Card ---- */
+        .result-card {
+            border: 1px solid #1a1a1a;
+            background: #0f0f0f;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: 30px; right: 30px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #00ff41, transparent);
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.8rem 1.2rem;
+            border-bottom: 1px solid #1a1a1a;
+            background: #0d0d0d;
+        }
+
+        .result-header .tag {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.65rem;
+            color: #0a0a0a;
+            background: #00ff41;
+            padding: 0.15rem 0.5rem;
+            border-radius: 2px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .result-header .label {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.7rem;
+            color: #555;
+        }
+
+        .result-body {
+            padding: 1.2rem;
+        }
+
+        .result-body pre {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.78rem;
+            color: #e0e0e0;
+            background: #080808;
+            border: 1px solid #181818;
+            border-radius: 3px;
+            padding: 1.2rem;
+            overflow-x: auto;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* ---- Actions ---- */
+        .actions {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .actions a {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.75rem;
+            text-decoration: none;
+            border-radius: 2px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .btn-back {
+            border: 1px solid #00ff41;
+            color: #00ff41;
+        }
+
+        .btn-back:hover {
+            background: #00ff41;
+            color: #0a0a0a;
+        }
+
+        .btn-logout {
+            border: 1px solid #333;
+            color: #555;
+        }
+
+        .btn-logout:hover {
+            border-color: #ff4444;
+            color: #ff4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="scanline"></div>
+
+    <!-- Top Bar -->
+    <div class="topbar">
+        <div class="brand">ID-Networkers &bull; Admin Panel</div>
+        <div class="user-info">logged in as <span>{{ username }}</span></div>
+        <nav>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/logout">Logout &times;</a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="page-title">&gt; XML Parse Result</div>
+        <div class="page-sub">Configuration file has been processed by the XML engine.</div>
+
+        <div class="result-card">
+            <div class="result-header">
+                <span class="tag">Output</span>
+                <span class="label">lxml / libxml2 parser</span>
+            </div>
+            <div class="result-body">
+                <pre>{{ result }}</pre>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a href="/dashboard" class="btn-back">&larr; Upload Another</a>
+            <a href="/logout" class="btn-logout">End Session</a>
+        </div>
+    </div>
+</body>
+</html>

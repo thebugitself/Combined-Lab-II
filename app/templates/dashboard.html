@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — The XML Gateway</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;600&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #0a0a0a;
+            color: #c0c0c0;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 255, 65, 0.015) 2px,
+                rgba(0, 255, 65, 0.015) 4px
+            );
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* ---- Top Bar ---- */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.8rem 2rem;
+            border-bottom: 1px solid #1a1a1a;
+            background: #0d0d0d;
+        }
+
+        .topbar .brand {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            color: #00ff41;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .topbar .user-info {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.7rem;
+            color: #555;
+        }
+
+        .topbar .user-info span {
+            color: #00ff41;
+        }
+
+        .topbar .logout {
+            color: #444;
+            text-decoration: none;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.7rem;
+            border: 1px solid #222;
+            padding: 0.3rem 0.8rem;
+            border-radius: 2px;
+            transition: all 0.2s;
+        }
+
+        .topbar .logout:hover {
+            border-color: #ff4444;
+            color: #ff4444;
+        }
+
+        /* ---- Main Content ---- */
+        .container {
+            max-width: 720px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .welcome {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: #00ff41;
+            margin-bottom: 0.3rem;
+        }
+
+        .welcome-sub {
+            font-size: 0.7rem;
+            color: #444;
+            margin-bottom: 2.5rem;
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* ---- Upload Card ---- */
+        .card {
+            border: 1px solid #1a1a1a;
+            background: #0f0f0f;
+            border-radius: 4px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: 30px; right: 30px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #00ff41, transparent);
+        }
+
+        .card h3 {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            color: #00ff41;
+            margin-bottom: 0.4rem;
+            letter-spacing: 0.08em;
+        }
+
+        .card .desc {
+            font-size: 0.72rem;
+            color: #555;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .upload-area {
+            border: 1px dashed #222;
+            border-radius: 4px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.2rem;
+            transition: border-color 0.2s;
+        }
+
+        .upload-area:hover {
+            border-color: #00ff41;
+        }
+
+        .upload-area label {
+            cursor: pointer;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .upload-area label .icon {
+            display: block;
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-area label span.hl {
+            color: #00ff41;
+            text-decoration: underline;
+        }
+
+        .upload-area input[type="file"] {
+            display: none;
+        }
+
+        .file-name {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.7rem;
+            color: #00ff41;
+            margin-top: 0.6rem;
+            min-height: 1rem;
+        }
+
+        .btn-upload {
+            width: 100%;
+            padding: 0.7rem;
+            background: transparent;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: all 0.2s;
+        }
+
+        .btn-upload:hover {
+            background: #00ff41;
+            color: #0a0a0a;
+        }
+
+        .btn-upload:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* ---- Status Panel ---- */
+        .status-panel {
+            margin-top: 2rem;
+            border: 1px solid #1a1a1a;
+            border-radius: 4px;
+            padding: 1rem 1.5rem;
+            background: #0d0d0d;
+        }
+
+        .status-panel h4 {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.7rem;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.8rem;
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.7rem;
+            padding: 0.3rem 0;
+            border-bottom: 1px solid #111;
+        }
+
+        .status-row:last-child {
+            border-bottom: none;
+        }
+
+        .status-row .label {
+            color: #444;
+        }
+
+        .status-row .value {
+            color: #00ff41;
+        }
+
+        .status-row .value.warn {
+            color: #ff9900;
+        }
+    </style>
+</head>
+<body>
+    <div class="scanline"></div>
+
+    <!-- Top Bar -->
+    <div class="topbar">
+        <div class="brand">ID-Networkers &bull; Admin Panel</div>
+        <div class="user-info">logged in as <span>{{ username }}</span></div>
+        <a href="/logout" class="logout">Logout &times;</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="welcome">&gt; Welcome back, {{ username }}.</div>
+        <div class="welcome-sub">Admin Dashboard — System Configuration Manager</div>
+
+        <!-- Upload Card -->
+        <div class="card">
+            <h3>&#x1F4C1; System Configuration Import</h3>
+            <div class="desc">
+                Upload an XML configuration file to apply system settings.<br>
+                Accepted format: <span style="color:#00ff41">.xml</span>
+            </div>
+
+            <form method="post" action="/upload-xml" enctype="multipart/form-data" id="uploadForm">
+                <div class="upload-area" id="dropArea">
+                    <label for="xmlfile">
+                        <span class="icon">⬆</span>
+                        Click to select or drag an <span class="hl">XML file</span>
+                    </label>
+                    <input type="file" name="xmlfile" id="xmlfile" accept=".xml">
+                    <div class="file-name" id="fileName"></div>
+                </div>
+
+                <button type="submit" class="btn-upload" id="btnUpload" disabled>
+                    Upload &amp; Parse Configuration
+                </button>
+            </form>
+        </div>
+
+        <!-- Status Panel -->
+        <div class="status-panel">
+            <h4>System Status</h4>
+            <div class="status-row">
+                <span class="label">XML Parser Engine</span>
+                <span class="value">lxml / libxml2</span>
+            </div>
+            <div class="status-row">
+                <span class="label">DTD Loading</span>
+                <span class="value warn">Enabled</span>
+            </div>
+            <div class="status-row">
+                <span class="label">Entity Resolution</span>
+                <span class="value warn">Enabled</span>
+            </div>
+            <div class="status-row">
+                <span class="label">Parser Mode</span>
+                <span class="value">Permissive</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('xmlfile');
+        const fileName  = document.getElementById('fileName');
+        const btnUpload = document.getElementById('btnUpload');
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                fileName.textContent = '📄 ' + fileInput.files[0].name;
+                btnUpload.disabled = false;
+            } else {
+                fileName.textContent = '';
+                btnUpload.disabled = true;
+            }
+        });
+    </script>
+</body>
+</html>
