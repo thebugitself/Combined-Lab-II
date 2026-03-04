@@ -1,4 +1,4 @@
-# 🛡️ ID-Networkers Combined Lab 2: The XML Gateway
+# ID-Networkers Combined Lab 2: The XML Gateway
 
 A **chained-attack** security lab that combines two vulnerabilities into a single exploitation path:
 
@@ -9,7 +9,7 @@ A **chained-attack** security lab that combines two vulnerabilities into a singl
 
 ---
 
-## 🎯 Learning Objectives
+## Learning Objectives
 
 After completing this lab, students will be able to:
 
@@ -21,7 +21,7 @@ After completing this lab, students will be able to:
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 id-networkers-combined-02/
@@ -41,7 +41,7 @@ id-networkers-combined-02/
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - **Docker** and **Docker Compose** installed.
@@ -72,7 +72,7 @@ docker compose down
 5. **Phase 1:** Figure out how to modify the JWT to gain admin access.
 6. **Phase 2:** Once inside the Admin Dashboard, use the XML upload feature to read `/flag.txt`.
 
-> 💡 **Hint:** Pay attention to the "System Status" panel on the dashboard — it tells you something about the parser configuration.
+> **Hint:** Pay attention to the "System Status" panel on the dashboard — it tells you something about the parser configuration.
 
 ---
 
@@ -88,7 +88,7 @@ docker compose down
 
 ---
 
-## ⚠️ Disclaimer
+## Disclaimer
 
 This lab is designed **exclusively for educational purposes** in controlled environments. The vulnerabilities are **intentional**. Never deploy this application on a public network or use these techniques against systems without explicit authorization.
 
